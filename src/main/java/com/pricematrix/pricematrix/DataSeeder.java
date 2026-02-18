@@ -28,28 +28,18 @@ public class DataSeeder implements CommandLineRunner {
     public void run(String... args) {
         if (customerRepository.count() > 0) return;
 
-        Category c1 = new Category(); c1.setName("飲料");
-        Category c2 = new Category(); c2.setName("零食");
-        Category c3 = new Category(); c3.setName("日用品");
-        categoryRepository.save(c1);
-        categoryRepository.save(c2);
-        categoryRepository.save(c3);
+        Category c1 = categoryRepository.save(new Category("飲料"));
+        Category c2 = categoryRepository.save(new Category("零食"));
+        Category c3 = categoryRepository.save(new Category("日用品"));
 
-        Customer cu1 = new Customer("張三", null);
-        Customer cu2 = new Customer("李四", null);
-        Customer cu3 = new Customer("王五", null);
-        customerRepository.save(cu1);
-        customerRepository.save(cu2);
-        customerRepository.save(cu3);
+        Customer cu1 = customerRepository.save(new Customer("張三", null));
+        Customer cu2 = customerRepository.save(new Customer("李四", null));
+        Customer cu3 = customerRepository.save(new Customer("王五", null));
 
-        Product p1 = new Product(); p1.setName("可樂"); p1.setCategory(c1);
-        Product p2 = new Product(); p2.setName("綠茶"); p2.setCategory(c1);
-        Product p3 = new Product(); p3.setName("洋芋片"); p3.setCategory(c2);
-        Product p4 = new Product(); p4.setName("衛生紙"); p4.setCategory(c3);
-        productRepository.save(p1);
-        productRepository.save(p2);
-        productRepository.save(p3);
-        productRepository.save(p4);
+        Product p1 = productRepository.save(new Product("可樂", new BigDecimal("100"), c1));
+        Product p2 = productRepository.save(new Product("綠茶", new BigDecimal("80"), c1));
+        Product p3 = productRepository.save(new Product("洋芋片", new BigDecimal("50"), c2));
+        Product p4 = productRepository.save(new Product("衛生紙", new BigDecimal("120"), c3));
 
         Discount d1 = new Discount(); d1.setCustomer(cu1); d1.setProduct(p1); d1.setDiscountRatio(new BigDecimal("0.85"));
         Discount d2 = new Discount(); d2.setCustomer(cu1); d2.setProduct(p2); d2.setDiscountRatio(new BigDecimal("0.90"));
