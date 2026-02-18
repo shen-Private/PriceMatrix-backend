@@ -35,9 +35,9 @@ public class DataSeeder implements CommandLineRunner {
         categoryRepository.save(c2);
         categoryRepository.save(c3);
 
-        Customer cu1 = new Customer(); cu1.setName("張三");
-        Customer cu2 = new Customer(); cu2.setName("李四");
-        Customer cu3 = new Customer(); cu3.setName("王五");
+        Customer cu1 = new Customer("張三", null);
+        Customer cu2 = new Customer("李四", null);
+        Customer cu3 = new Customer("王五", null);
         customerRepository.save(cu1);
         customerRepository.save(cu2);
         customerRepository.save(cu3);
