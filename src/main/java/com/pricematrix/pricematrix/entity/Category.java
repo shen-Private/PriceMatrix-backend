@@ -3,7 +3,7 @@ package com.pricematrix.pricematrix.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "categories")
+@Table(name = "pricing_categories")
 public class Category {
 
     @Id

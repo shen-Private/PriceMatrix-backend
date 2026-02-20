@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController          // 告訴 Spring：這是一個 API Controller
-@RequestMapping("/customers")  // 這個 Controller 處理 /customers 開頭的請求
+@RequestMapping("/api/customers")
 @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:6006"})
 public class CustomerController {
 

@@ -7,7 +7,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 
 @RestController          // 告訴 Spring：這是一個 API Controller
-@RequestMapping("/discounts")  // 這個 Controller 處理 /Discounts 開頭的請求
+@RequestMapping("/api/discounts")
 @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:6006"})
 public class DiscountController {
 

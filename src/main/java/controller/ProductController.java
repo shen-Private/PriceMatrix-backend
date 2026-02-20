@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController          // 告訴 Spring：這是一個 API Controller
-@RequestMapping("/products")  // 這個 Controller 處理 /Products 開頭的請求
+@RequestMapping("/api/products")
 @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:6006"})
 public class ProductController {
 
