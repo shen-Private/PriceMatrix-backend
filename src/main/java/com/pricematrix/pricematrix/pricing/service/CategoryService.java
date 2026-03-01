@@ -1,7 +1,7 @@
-package com.pricematrix.pricematrix.service;
+package com.pricematrix.pricematrix.pricing.service;
 
-import com.pricematrix.pricematrix.entity.Category;
-import com.pricematrix.pricematrix.repository.CategoryRepository;
+import com.pricematrix.pricematrix.pricing.entity.Category;
+import com.pricematrix.pricematrix.pricing.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
 

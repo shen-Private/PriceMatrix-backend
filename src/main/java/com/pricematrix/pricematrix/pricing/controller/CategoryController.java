@@ -1,7 +1,7 @@
-package com.pricematrix.pricematrix.controller;
+package com.pricematrix.pricematrix.pricing.controller;
 
-import com.pricematrix.pricematrix.entity.Category;
-import com.pricematrix.pricematrix.service.CategoryService;
+import com.pricematrix.pricematrix.pricing.entity.Category;
+import com.pricematrix.pricematrix.pricing.service.CategoryService;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -16,7 +16,7 @@ public class CategoryController {
         this.CategoryService = CategoryService;
     }
 
-    // GET /Categorys → 取得所有客戶
+    // GET /CateAgorys → 取得所有客戶
     @GetMapping
     public List<Category> getAllCategorys() {
         return CategoryService.getAllCategorys();

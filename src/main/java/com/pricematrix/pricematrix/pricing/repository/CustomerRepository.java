@@ -1,6 +1,6 @@
-package com.pricematrix.pricematrix.repository;
+package com.pricematrix.pricematrix.pricing.repository;
 
-import com.pricematrix.pricematrix.entity.Customer;
+import com.pricematrix.pricematrix.pricing.entity.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 

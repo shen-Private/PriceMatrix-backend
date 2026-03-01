@@ -1,7 +1,7 @@
-package com.pricematrix.pricematrix.controller;
+package com.pricematrix.pricematrix.pricing.controller;
 
-import com.pricematrix.pricematrix.entity.Customer;
-import com.pricematrix.pricematrix.service.CustomerService;
+import com.pricematrix.pricematrix.pricing.entity.Customer;
+import com.pricematrix.pricematrix.pricing.service.CustomerService;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 

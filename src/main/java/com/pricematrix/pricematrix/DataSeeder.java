@@ -1,7 +1,10 @@
 package com.pricematrix.pricematrix;
 
-import com.pricematrix.pricematrix.entity.*;
-import com.pricematrix.pricematrix.repository.*;
+import com.pricematrix.pricematrix.pricing.entity.Category;
+import com.pricematrix.pricematrix.pricing.entity.Customer;
+import com.pricematrix.pricematrix.pricing.entity.Discount;
+import com.pricematrix.pricematrix.pricing.entity.Product;
+import com.pricematrix.pricematrix.pricing.repository.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import java.math.BigDecimal;

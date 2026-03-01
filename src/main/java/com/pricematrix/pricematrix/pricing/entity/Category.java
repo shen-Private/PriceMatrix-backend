@@ -1,4 +1,4 @@
-package com.pricematrix.pricematrix.entity;
+package com.pricematrix.pricematrix.pricing.entity;
 
 import jakarta.persistence.*;
 

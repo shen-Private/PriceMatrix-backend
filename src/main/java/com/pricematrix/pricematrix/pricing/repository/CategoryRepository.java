@@ -1,6 +1,6 @@
-package com.pricematrix.pricematrix.repository;
+package com.pricematrix.pricematrix.pricing.repository;
 
-import com.pricematrix.pricematrix.entity.Category;
+import com.pricematrix.pricematrix.pricing.entity.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 // Interface：定義「這個 Repository 能做什麼」

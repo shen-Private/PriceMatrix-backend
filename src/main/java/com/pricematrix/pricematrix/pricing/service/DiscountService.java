@@ -1,10 +1,10 @@
-package com.pricematrix.pricematrix.service;
+package com.pricematrix.pricematrix.pricing.service;
 
-import com.pricematrix.pricematrix.entity.Discount;
-import com.pricematrix.pricematrix.entity.Product;
-import com.pricematrix.pricematrix.repository.DiscountRepository;
+import com.pricematrix.pricematrix.pricing.entity.Discount;
+import com.pricematrix.pricematrix.pricing.entity.Product;
+import com.pricematrix.pricematrix.pricing.repository.DiscountRepository;
 import org.springframework.stereotype.Service;
-import com.pricematrix.pricematrix.repository.ProductRepository;
+import com.pricematrix.pricematrix.pricing.repository.ProductRepository;
 import java.util.List;
 
 @Service  // 告訴 Spring：這是一個 Service 元件
@@ -49,10 +49,10 @@ public class DiscountService {
     }
     // 新增折扣記錄
     public Discount createDiscount(Discount discount) {
-        // 先用商品名稱查出真正的 Product 物件
-        String productName = discount.getProduct().getName();
-        Product product = productRepository.findByName(productName)
-                .orElseThrow(() -> new RuntimeException("找不到商品：" + productName));
+        // 用商品 ID 查出真正的 Product 物件
+        Long productId = discount.getProduct().getId();
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("找不到商品：" + productId));
 
         // 把真正的 Product 設回去
         discount.setProduct(product);

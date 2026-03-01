@@ -1,4 +1,4 @@
-package com.pricematrix.pricematrix.entity;
+package com.pricematrix.pricematrix.pricing.entity;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
@@ -16,6 +16,9 @@ public class Product {
 
     @Column(nullable = false)
     private BigDecimal basePrice;
+
+    @Column(nullable = false)
+    private boolean isActive = true;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
@@ -37,6 +40,9 @@ public class Product {
 
     public BigDecimal getBasePrice() { return basePrice; }
     public void setBasePrice(BigDecimal basePrice) { this.basePrice = basePrice; }
+
+    public boolean isActive() { return isActive; }
+    public void setActive(boolean isActive) { this.isActive = isActive; }
 
     public Category getCategory() { return category; }
     public void setCategory(Category category) { this.category = category; }
