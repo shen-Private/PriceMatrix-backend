@@ -9,13 +9,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.pricematrix.pricematrix.auth.service.AdminUserService;
 import java.util.List;
-
+import io.jsonwebtoken.Claims;
+import java.util.Map;
+import com.pricematrix.pricematrix.auth.util.JwtUtil;
 @RestController
 @RequestMapping("/api/admin/users")
 @RequiredArgsConstructor
 public class AdminUserController {
 
     private final AdminUserService adminUserService;
+    private final JwtUtil jwtUtil;
 
     // 查所有帳號
     @GetMapping
@@ -31,7 +34,22 @@ public class AdminUserController {
 
     // 停用 / 啟用
     @PatchMapping("/{id}/status")
-    public ResponseEntity<CommonUser> updateStatus(@PathVariable Long id, @RequestBody UpdateStatusRequest request) {
+    public ResponseEntity<?> updateStatus(
+            @PathVariable Long id,
+            @RequestBody UpdateStatusRequest request,
+            @CookieValue(name = "jwt", required = false) String token) {
+
+        if (token == null) return ResponseEntity.status(401).body(Map.of("error", "未登入"));
+
+        Claims claims = jwtUtil.parseToken(token);
+        String currentUsername = claims.getSubject();
+
+        // 查出要操作的帳號
+        CommonUser target = adminUserService.findById(id);
+        if (target.getUsername().equals(currentUsername)) {
+            return ResponseEntity.status(400).body(Map.of("error", "不能停用自己的帳號"));
+        }
+
         return ResponseEntity.ok(adminUserService.updateStatus(id, request.isActive()));
     }
 

@@ -2,6 +2,7 @@ package com.pricematrix.pricematrix.auth.service;
 import com.pricematrix.pricematrix.auth.dto.CreateUserRequest;
 import com.pricematrix.pricematrix.auth.entity.CommonUser;
 import com.pricematrix.pricematrix.auth.repository.CommonUserRepository;
+import com.pricematrix.pricematrix.auth.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,12 @@ public class AdminUserService {
 
     private final CommonUserRepository commonUserRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
+    public CommonUser findById(Long id) {
+        return commonUserRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
     // 查所有帳號
     public List<CommonUser> getAllUsers() {
         return commonUserRepository.findAll();
