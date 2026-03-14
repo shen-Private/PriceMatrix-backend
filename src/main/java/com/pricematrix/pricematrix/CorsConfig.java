@@ -17,6 +17,7 @@ public class CorsConfig {
 
                         .allowedOrigins(
                                 "http://localhost:3000",
+                                "http://localhost:3001",
                                 "https://price-matrix-psi.vercel.app"
                         )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")

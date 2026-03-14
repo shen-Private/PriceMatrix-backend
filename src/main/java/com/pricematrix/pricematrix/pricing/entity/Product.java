@@ -1,5 +1,6 @@
 package com.pricematrix.pricematrix.pricing.entity;
 
+import com.pricematrix.pricematrix.inventory.entity.Manufacturer;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 
@@ -24,6 +25,10 @@ public class Product {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "manufacturer_id")
+    private Manufacturer manufacturer;
+
     public Product() {}
 
     public Product(String name, BigDecimal basePrice, Category category) {
@@ -46,4 +51,7 @@ public class Product {
 
     public Category getCategory() { return category; }
     public void setCategory(Category category) { this.category = category; }
+
+    public Manufacturer getManufacturer() { return manufacturer; }
+    public void setManufacturer(Manufacturer manufacturer) { this.manufacturer = manufacturer; }
 }

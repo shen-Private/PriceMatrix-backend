@@ -32,7 +32,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-
+// CORS preflight（OPTIONS）はそのまま通す
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         // 從 Cookie 取 JWT
         String token = null;
         if (request.getCookies() != null) {
