@@ -104,7 +104,31 @@ public class InventoryItemService {
 
         return savedItem;  // ← 改這行，不要再 save 一次
     }
+    @Transactional
+    public InventoryItem createPendingItem(Long productId, String barcode) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found: " + productId));
 
+        InventoryItem item = new InventoryItem();
+        item.setProduct(product);
+        item.setBarcode(barcode);
+        item.setStockType(InventoryItem.StockType.internal); // 預設，之後CS補齊
+        item.setUnit("個"); // 預設單位，CS補齊時可修改
+        item.setIsActive(true);
+        item.setCreatedAt(LocalDateTime.now());
+        item.setUpdatedAt(LocalDateTime.now());
+
+        InventoryItem savedItem = itemRepository.save(item);
+
+        // 預設建立 stock（quantity = 0）
+        InventoryStock stock = new InventoryStock();
+        stock.setItem(savedItem);
+        stock.setQuantity(0);
+        stock.setLastUpdatedAt(LocalDateTime.now());
+        inventoryStockRepository.save(stock);
+
+        return savedItem;
+    }
     public record ItemOverviewDTO(
             InventoryItem item,
             InventoryStock stock,

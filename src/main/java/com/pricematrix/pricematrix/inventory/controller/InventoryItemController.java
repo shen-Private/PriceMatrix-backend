@@ -50,4 +50,13 @@ public class InventoryItemController {
     public List<InventoryItemService.ItemOverviewDTO> getOverview() {
         return itemService.getOverview();
     }
+
+    @PostMapping("/pending")
+    public ResponseEntity<InventoryItem> createPending(
+            @RequestParam Long productId,
+            @RequestParam String barcode) {
+        InventoryItem item = itemService.createPendingItem(productId, barcode);
+        return ResponseEntity.ok(item);
+    }
+
 }
