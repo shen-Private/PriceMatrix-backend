@@ -29,6 +29,9 @@ public class Product {
     @JoinColumn(name = "manufacturer_id")
     private Manufacturer manufacturer;
 
+    @Column(nullable = false, length = 20)
+    private String status = "active";
+
     public Product() {}
 
     public Product(String name, BigDecimal basePrice, Category category) {
@@ -54,4 +57,7 @@ public class Product {
 
     public Manufacturer getManufacturer() { return manufacturer; }
     public void setManufacturer(Manufacturer manufacturer) { this.manufacturer = manufacturer; }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 }

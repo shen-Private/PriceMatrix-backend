@@ -1,5 +1,6 @@
 package com.pricematrix.pricematrix.pricing.service;
 
+import com.pricematrix.pricematrix.pricing.entity.Category;
 import com.pricematrix.pricematrix.pricing.entity.Product;
 import com.pricematrix.pricematrix.pricing.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -36,12 +37,16 @@ public class ProductService {
     }
 
     // 編輯商品（名稱、定價、分類）
-    public Product updateProduct(Long id, Product updated) {
+    public Product updateProduct(Long id, String name, java.math.BigDecimal basePrice, Long categoryId) {
         Product existing = ProductRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("找不到商品：" + id));
-        existing.setName(updated.getName());
-        existing.setBasePrice(updated.getBasePrice());
-        existing.setCategory(updated.getCategory());
+        if (name != null) existing.setName(name);
+        if (basePrice != null) existing.setBasePrice(basePrice);
+        if (categoryId != null) {
+            Category category = new Category();
+            category.setId(categoryId);
+            existing.setCategory(category);
+        }
         return ProductRepository.save(existing);
     }
 
@@ -59,5 +64,34 @@ public class ProductService {
                 .orElseThrow(() -> new RuntimeException("找不到商品：" + id));
         existing.setActive(true);
         ProductRepository.save(existing);
+    }
+
+    // 簡易建檔（倉庫掃到未知條碼用）
+    public Product createPendingProduct(String name, Long manufacturerId) {
+        Product product = new Product();
+        product.setName(name);
+        product.setBasePrice(java.math.BigDecimal.ZERO);
+        product.setActive(true);
+        product.setStatus("pending");
+        if (manufacturerId != null) {
+            com.pricematrix.pricematrix.inventory.entity.Manufacturer m =
+                    new com.pricematrix.pricematrix.inventory.entity.Manufacturer();
+            m.setId(manufacturerId);
+            product.setManufacturer(m);
+        }
+        return ProductRepository.save(product);
+    }
+
+    // 取得待確認商品列表（CS管理用）
+    public List<Product> getPendingProducts() {
+        return ProductRepository.findByStatus("pending");
+    }
+
+    // CS確認商品
+    public Product confirmProduct(Long id) {
+        Product existing = ProductRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("找不到商品：" + id));
+        existing.setStatus("active");
+        return ProductRepository.save(existing);
     }
 }

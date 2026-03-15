@@ -25,10 +25,9 @@ public class InventoryItemController {
     }
 
     @PostMapping
-    public InventoryItem createItem(@RequestBody InventoryItem item) {
-        return itemService.createItem(item);
+    public InventoryItem createItem(@RequestBody CreateItemRequest req) {
+        return itemService.createItemWithProduct(req);
     }
-
     @PutMapping("/{id}")
     public InventoryItem updateItem(@PathVariable Long id, @RequestBody InventoryItem item) {
         return itemService.updateItem(id, item);

@@ -24,4 +24,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
         )
     """)
     List<Product> findAvailableProductsForCustomer(@Param("customerId") Long customerId);
+    List<Product> findByStatus(String status);
 }

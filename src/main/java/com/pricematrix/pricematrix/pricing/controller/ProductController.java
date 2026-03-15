@@ -1,6 +1,7 @@
 package com.pricematrix.pricematrix.pricing.controller;
 
 import com.pricematrix.pricematrix.pricing.entity.Product;
+import com.pricematrix.pricematrix.pricing.repository.ProductRepository;
 import com.pricematrix.pricematrix.pricing.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,10 +46,9 @@ public class ProductController {
     @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(
             @PathVariable Long id,
-            @RequestBody Product product) {
-        return ResponseEntity.ok(ProductService.updateProduct(id, product));
+            @RequestBody UpdateProductRequest req) {
+        return ResponseEntity.ok(ProductService.updateProduct(id, req.name, req.basePrice, req.categoryId));
     }
-
     // DELETE /api/products/{id} → 軟刪除（停用）
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deactivateProduct(@PathVariable Long id) {
@@ -62,4 +62,27 @@ public class ProductController {
         ProductService.activateProduct(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/pending")
+    public ResponseEntity<Product> createPendingProduct(
+            @RequestParam String name,
+            @RequestParam(required = false) Long manufacturerId) {
+        return ResponseEntity.ok(ProductService.createPendingProduct(name, manufacturerId));
+    }
+
+    @GetMapping("/pending")
+    public List<Product> getPendingProducts() {
+        return ProductService.getPendingProducts();
+    }
+
+    @PutMapping("/{id}/confirm")
+    public ResponseEntity<Product> confirmProduct(@PathVariable Long id) {
+        return ResponseEntity.ok(ProductService.confirmProduct(id));
+    }
+
+}
+class UpdateProductRequest {
+    public String name;
+    public java.math.BigDecimal basePrice;
+    public Long categoryId;
 }
