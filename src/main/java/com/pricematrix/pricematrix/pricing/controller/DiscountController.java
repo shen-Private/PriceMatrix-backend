@@ -64,4 +64,12 @@ public class DiscountController {
     public ResponseEntity<List<DiscountAuditLog>> getAuditLogs(@PathVariable Long id) {
         return ResponseEntity.ok(DiscountService.getAuditLogs(id));
     }
+    @GetMapping("/customer/{customerId}/product/{productId}")
+    public ResponseEntity<Discount> getDiscountByCustomerAndProduct(
+            @PathVariable Long customerId,
+            @PathVariable Long productId) {
+        return DiscountService.findByCustomerAndProduct(customerId, productId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 }

@@ -3,6 +3,7 @@ package com.pricematrix.pricematrix.pricing.repository;
 import com.pricematrix.pricematrix.pricing.entity.Discount;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
+import java.util.Optional;
 // Interface：定義「這個 Repository 能做什麼」
 // JpaRepository 已經幫你實作好 findAll, findById, save, delete...
 public interface DiscountRepository extends JpaRepository<Discount, Long> {
@@ -11,4 +12,6 @@ public interface DiscountRepository extends JpaRepository<Discount, Long> {
     List<Discount> findByCustomerId(Long customerId);
     // 按客戶ID + 分類ID查詢折扣
     List<Discount> findByCustomerIdAndProductCategoryId(Long customerId, Long categoryId);
+    Optional<Discount> findByCustomerIdAndProductId(Long customerId, Long productId);
+
 }

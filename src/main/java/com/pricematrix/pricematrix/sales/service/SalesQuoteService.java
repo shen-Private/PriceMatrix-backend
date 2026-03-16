@@ -1,8 +1,10 @@
 package com.pricematrix.pricematrix.sales.service;
 
 import com.pricematrix.pricematrix.pricing.entity.Customer;
+import com.pricematrix.pricematrix.pricing.entity.Discount;
 import com.pricematrix.pricematrix.pricing.entity.Product;
 import com.pricematrix.pricematrix.pricing.repository.CustomerRepository;
+import com.pricematrix.pricematrix.pricing.repository.DiscountRepository;
 import com.pricematrix.pricematrix.pricing.repository.ProductRepository;
 import com.pricematrix.pricematrix.sales.dto.CreateQuoteRequest;
 import com.pricematrix.pricematrix.sales.entity.SalesQuote;
@@ -12,8 +14,10 @@ import com.pricematrix.pricematrix.sales.repository.SalesQuoteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,10 +25,9 @@ import java.util.stream.Collectors;
 public class SalesQuoteService {
 
     private final SalesQuoteRepository quoteRepository;
-    private final SalesQuoteItemRepository quoteItemRepository;
     private final CustomerRepository customerRepository;
     private final ProductRepository productRepository;
-
+    private final DiscountRepository discountRepository;
     // 建立報價單
     public SalesQuote createQuote(CreateQuoteRequest request, String createdBy) {
         Customer customer = customerRepository.findById(request.getCustomerId())
@@ -118,7 +121,23 @@ public class SalesQuoteService {
             item.setQuote(quote);
             item.setProduct(product);
             item.setQuantity(itemReq.getQuantity());
-            item.setUnitPrice(itemReq.getUnitPrice());
+
+// 若前端有傳單價則用前端的，否則自動查折扣
+            if (itemReq.getUnitPrice() != null) {
+                item.setUnitPrice(itemReq.getUnitPrice());
+            } else {
+                // 查該客戶對該商品的折扣
+                Optional<Discount> discount = discountRepository.findByCustomerIdAndProductId(
+                        request.getCustomerId(), itemReq.getProductId());
+                if (discount.isPresent()) {
+                    BigDecimal unitPrice = product.getBasePrice()
+                            .multiply(discount.get().getDiscountRatio());
+                    item.setUnitPrice(unitPrice);
+                } else {
+                    // 沒有折扣設定，用定價
+                    item.setUnitPrice(product.getBasePrice());
+                }
+            }
             return item;
         }).collect(Collectors.toList());
 

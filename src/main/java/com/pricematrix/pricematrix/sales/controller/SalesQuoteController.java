@@ -3,6 +3,7 @@ package com.pricematrix.pricematrix.sales.controller;
 import com.pricematrix.pricematrix.sales.dto.CreateQuoteRequest;
 import com.pricematrix.pricematrix.sales.entity.SalesQuote;
 import com.pricematrix.pricematrix.sales.service.SalesQuoteService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,9 +21,11 @@ public class SalesQuoteController {
     @PostMapping
     public ResponseEntity<SalesQuote> createQuote(
             @RequestBody CreateQuoteRequest request,
-            @CookieValue(name = "username", defaultValue = "unknown") String username) {
+            HttpServletRequest httpRequest) {
+        String username = (String) httpRequest.getAttribute("username");
         return ResponseEntity.ok(quoteService.createQuote(request, username));
     }
+
 
     // 查詢全部報價單
     @GetMapping
@@ -48,10 +51,10 @@ public class SalesQuoteController {
     @PostMapping("/{id}/revise")
     public ResponseEntity<SalesQuote> createRevision(
             @PathVariable Long id,
-            @CookieValue(name = "username", defaultValue = "unknown") String username) {
+            HttpServletRequest httpRequest) {
+        String username = (String) httpRequest.getAttribute("username");
         return ResponseEntity.ok(quoteService.createRevision(id, username));
     }
-
     // 更新報價單內容（DRAFT 才能編輯）
     @PutMapping("/{id}")
     public ResponseEntity<SalesQuote> updateQuote(

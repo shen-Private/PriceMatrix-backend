@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class DiscountService {
@@ -101,5 +102,8 @@ public class DiscountService {
         log.setAction(action);
         log.setOperatedBy("系統使用者"); // 之後接登入系統再換
         auditLogRepository.save(log);
+    }
+    public Optional<Discount> findByCustomerAndProduct(Long customerId, Long productId) {
+        return DiscountRepository.findByCustomerIdAndProductId(customerId, productId);
     }
 }
