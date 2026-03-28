@@ -10,4 +10,5 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     // 不需要寫任何東西，Spring 自動幫你實作
     // 按名稱模糊搜尋（名稱包含關鍵字就符合）
     List<Customer> findByNameContaining(String name);
+    List<Customer> findByActiveTrue();  // 新增
 }

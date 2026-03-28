@@ -9,7 +9,6 @@ import com.pricematrix.pricematrix.pricing.repository.ProductRepository;
 import com.pricematrix.pricematrix.sales.dto.CreateQuoteRequest;
 import com.pricematrix.pricematrix.sales.entity.SalesQuote;
 import com.pricematrix.pricematrix.sales.entity.SalesQuoteItem;
-import com.pricematrix.pricematrix.sales.repository.SalesQuoteItemRepository;
 import com.pricematrix.pricematrix.sales.repository.SalesQuoteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -43,7 +42,9 @@ public class SalesQuoteService {
                     .orElseThrow(() -> new RuntimeException("Product not found"));
             SalesQuoteItem item = new SalesQuoteItem();
             item.setQuote(quote);
-            item.setProduct(product);
+            item.setProductId(product.getId());
+            item.setProductName(product.getName());
+            item.setBasePrice(product.getBasePrice());
             item.setQuantity(itemReq.getQuantity());
             item.setUnitPrice(itemReq.getUnitPrice());
             return item;
@@ -88,7 +89,10 @@ public class SalesQuoteService {
         List<SalesQuoteItem> items = parent.getItems().stream().map(i -> {
             SalesQuoteItem item = new SalesQuoteItem();
             item.setQuote(revision);
-            item.setProduct(i.getProduct());
+            item.setProductId(i.getProductId());
+            item.setProductName(i.getProductName());
+            item.setProductCode(i.getProductCode());
+            item.setBasePrice(i.getBasePrice());
             item.setQuantity(i.getQuantity());
             item.setUnitPrice(i.getUnitPrice());
             return item;
@@ -119,7 +123,12 @@ public class SalesQuoteService {
                     .orElseThrow(() -> new RuntimeException("Product not found"));
             SalesQuoteItem item = new SalesQuoteItem();
             item.setQuote(quote);
-            item.setProduct(product);
+            item.setProductId(product.getId());
+            item.setProductName(product.getName());
+            item.setBasePrice(product.getBasePrice());
+            item.setQuantity(itemReq.getQuantity());
+
+// 若前端有傳單價則用前端的，否則自動查折扣
             item.setQuantity(itemReq.getQuantity());
 
 // 若前端有傳單價則用前端的，否則自動查折扣

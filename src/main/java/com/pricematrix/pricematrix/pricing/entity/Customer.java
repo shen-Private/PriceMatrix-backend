@@ -1,6 +1,7 @@
 package com.pricematrix.pricematrix.pricing.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "pricing_customers")
@@ -16,13 +17,45 @@ public class Customer {
     @Column(length = 150)
     private String email;
 
-    public Customer() {}
+    @Column(length = 50)
+    private String phone;
 
-    public Customer(String name, String email) {
-        this.name = name;
-        this.email = email;
+    @Column(length = 300)
+    private String address;
+
+    @Column(name = "contact_person", length = 100)
+    private String contactPerson;
+
+    @Column(length = 500)
+    private String note;
+
+    // 自我參照：多事務所的上層客戶
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private Customer parent;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
     }
 
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
+    @Column(name = "is_active", nullable = false)
+    private boolean active = true;
+    public Customer() {}
+
+    // Getters & Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -31,4 +64,25 @@ public class Customer {
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
+
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
+
+    public String getAddress() { return address; }
+    public void setAddress(String address) { this.address = address; }
+
+    public String getContactPerson() { return contactPerson; }
+    public void setContactPerson(String contactPerson) { this.contactPerson = contactPerson; }
+
+    public String getNote() { return note; }
+    public void setNote(String note) { this.note = note; }
+
+    public Customer getParent() { return parent; }
+    public void setParent(Customer parent) { this.parent = parent; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+
+    public boolean isActive() { return active; }
+    public void setActive(boolean active) { this.active = active; }
 }

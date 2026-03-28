@@ -1,6 +1,7 @@
 package com.pricematrix.pricematrix.sales.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.pricematrix.pricematrix.pricing.entity.Customer;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -44,6 +45,6 @@ public class SalesQuote {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "parent_quote_id")
-    @JsonBackReference
+    @JsonIgnoreProperties({"items", "customer", "parentQuote", "createdAt", "updatedAt", "status", "note", "createdBy"})
     private SalesQuote parentQuote;
 }

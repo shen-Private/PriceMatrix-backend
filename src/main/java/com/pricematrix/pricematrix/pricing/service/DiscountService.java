@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class DiscountService {
@@ -40,7 +41,7 @@ public class DiscountService {
     }
 
     // 單筆修改（原本的邏輯 + 寫 audit log）
-    public Discount updateDiscount(Long id, Discount updatedDiscount) {
+    public Discount updateDiscount(Long id, Discount updatedDiscount, HttpServletRequest request) {
         Discount existing = DiscountRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("找不到折扣記錄：" + id));
 
@@ -49,13 +50,14 @@ public class DiscountService {
         Discount saved = DiscountRepository.save(existing);
 
         // 寫 audit log
-        writeAuditLog(id, oldRatio, saved.getDiscountRatio(), "UPDATE");
-
+        String operatedBy = (String) request.getAttribute("username");
+        writeAuditLog(id, oldRatio, saved.getDiscountRatio(), "UPDATE", operatedBy);
         return saved;
     }
 
     // 批次修改：傳入 Map<discountId, newRatio>
-    public void batchUpdateDiscounts(Map<Long, BigDecimal> updates) {
+    public void batchUpdateDiscounts(Map<Long, BigDecimal> updates, HttpServletRequest request) {
+        String operatedBy = (String) request.getAttribute("username");  // ← 加在 for 迴圈之前
         for (Map.Entry<Long, BigDecimal> entry : updates.entrySet()) {
             Long discountId = entry.getKey();
             BigDecimal newRatio = entry.getValue();
@@ -67,7 +69,8 @@ public class DiscountService {
             existing.setDiscountRatio(newRatio);
             DiscountRepository.save(existing);
 
-            writeAuditLog(discountId, oldRatio, newRatio, "BATCH_UPDATE");
+            writeAuditLog(discountId, oldRatio, newRatio, "BATCH_UPDATE", operatedBy);
+
         }
     }
 
@@ -75,7 +78,7 @@ public class DiscountService {
         DiscountRepository.deleteById(id);
     }
 
-    public Discount createDiscount(Discount discount) {
+    public Discount createDiscount(Discount discount, HttpServletRequest request) {
         Long productId = discount.getProduct().getId();
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("找不到商品：" + productId));
@@ -83,8 +86,8 @@ public class DiscountService {
         Discount saved = DiscountRepository.save(discount);
 
         // 新增也寫 log
-        writeAuditLog(saved.getId(), null, saved.getDiscountRatio(), "CREATE");
-
+        String operatedBy = (String) request.getAttribute("username");
+        writeAuditLog(saved.getId(), null, saved.getDiscountRatio(), "CREATE", operatedBy);
         return saved;
     }
 
@@ -94,15 +97,16 @@ public class DiscountService {
     }
 
     // 內部工具方法：寫 audit log
-    private void writeAuditLog(Long discountId, BigDecimal oldRatio, BigDecimal newRatio, String action) {
+    private void writeAuditLog(Long discountId, BigDecimal oldRatio, BigDecimal newRatio, String action, String operatedBy) {
         DiscountAuditLog log = new DiscountAuditLog();
         log.setDiscountId(discountId);
         log.setOldRatio(oldRatio);
         log.setNewRatio(newRatio);
         log.setAction(action);
-        log.setOperatedBy("系統使用者"); // 之後接登入系統再換
+        log.setOperatedBy(operatedBy); // ← 不再寫死
         auditLogRepository.save(log);
     }
+
     public Optional<Discount> findByCustomerAndProduct(Long customerId, Long productId) {
         return DiscountRepository.findByCustomerIdAndProductId(customerId, productId);
     }

@@ -1,7 +1,6 @@
 package com.pricematrix.pricematrix.sales.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.pricematrix.pricematrix.pricing.entity.Product;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,9 +22,18 @@ public class SalesQuoteItem {
     @JsonBackReference
     private SalesQuote quote;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
+    // 移除 @ManyToOne Product 引用，改為 ID + 快照欄位
+    @Column(name = "product_id", nullable = false)
+    private Long productId;
+
+    @Column(name = "product_name")
+    private String productName;
+
+    @Column(name = "product_code")
+    private String productCode;
+
+    @Column(name = "base_price")
+    private BigDecimal basePrice;
 
     @Column(nullable = false)
     private Integer quantity;
