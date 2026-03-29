@@ -1,10 +1,10 @@
-package com.pricematrix.pricematrix.pricing.entity;
+package com.pricematrix.pricematrix.customer.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "pricing_customers")
+@Table(name = "customers")
 public class Customer {
 
     @Id
@@ -37,6 +37,7 @@ public class Customer {
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;

@@ -1,9 +1,9 @@
 package com.pricematrix.pricematrix.sales.service;
 
-import com.pricematrix.pricematrix.pricing.entity.Customer;
+import com.pricematrix.pricematrix.customer.entity.Customer;
 import com.pricematrix.pricematrix.pricing.entity.Discount;
 import com.pricematrix.pricematrix.pricing.entity.Product;
-import com.pricematrix.pricematrix.pricing.repository.CustomerRepository;
+import com.pricematrix.pricematrix.customer.repository.CustomerRepository;
 import com.pricematrix.pricematrix.pricing.repository.DiscountRepository;
 import com.pricematrix.pricematrix.pricing.repository.ProductRepository;
 import com.pricematrix.pricematrix.sales.dto.CreateQuoteRequest;

@@ -1,5 +1,6 @@
 package com.pricematrix.pricematrix.pricing.entity;
 
+import com.pricematrix.pricematrix.customer.entity.Customer;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

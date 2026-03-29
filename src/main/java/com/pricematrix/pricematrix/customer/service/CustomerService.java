@@ -1,7 +1,7 @@
-package com.pricematrix.pricematrix.pricing.service;
+package com.pricematrix.pricematrix.customer.service;
 
-import com.pricematrix.pricematrix.pricing.entity.Customer;
-import com.pricematrix.pricematrix.pricing.repository.CustomerRepository;
+import com.pricematrix.pricematrix.customer.entity.Customer;
+import com.pricematrix.pricematrix.customer.repository.CustomerRepository;
 import com.pricematrix.pricematrix.sales.entity.SalesProspect;
 import com.pricematrix.pricematrix.sales.repository.SalesProspectRepository;
 import org.springframework.stereotype.Service;

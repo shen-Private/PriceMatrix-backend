@@ -1,7 +1,8 @@
 package com.pricematrix.pricematrix;
 
+import com.pricematrix.pricematrix.customer.repository.CustomerRepository;
 import com.pricematrix.pricematrix.pricing.entity.Category;
-import com.pricematrix.pricematrix.pricing.entity.Customer;
+import com.pricematrix.pricematrix.customer.entity.Customer;
 import com.pricematrix.pricematrix.pricing.entity.Discount;
 import com.pricematrix.pricematrix.pricing.entity.Product;
 import com.pricematrix.pricematrix.pricing.repository.*;

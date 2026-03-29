@@ -1,6 +1,6 @@
 package com.pricematrix.pricematrix.sales.entity;
 
-import com.pricematrix.pricematrix.pricing.entity.Customer;
+import com.pricematrix.pricematrix.customer.entity.Customer;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
