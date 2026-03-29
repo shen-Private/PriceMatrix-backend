@@ -53,4 +53,9 @@ public class CustomerController {
         boolean isActive = body.get("isActive");
         return ResponseEntity.ok(customerService.updateStatus(id, isActive));
     }
+    @PostMapping("/convert/{prospectId}")
+    public ResponseEntity<Customer> convertProspect(
+            @PathVariable Long prospectId) {
+        return ResponseEntity.ok(customerService.convertProspect(prospectId));
+    }
 }

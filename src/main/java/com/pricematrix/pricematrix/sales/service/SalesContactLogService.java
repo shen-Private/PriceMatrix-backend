@@ -20,7 +20,9 @@ public class SalesContactLogService {
     public List<SalesContactLog> getByCustomerId(Long customerId) {
         return repository.findByCustomerIdOrderByContactedAtDesc(customerId);
     }
-
+    public List<SalesContactLog> getByProspectId(Long prospectId) {
+        return repository.findByProspectIdOrderByContactedAtDesc(prospectId);
+    }
     // 新增一筆聯絡紀錄
     public SalesContactLog create(SalesContactLog log, HttpServletRequest request) {
         String createdBy = (String) request.getAttribute("username");

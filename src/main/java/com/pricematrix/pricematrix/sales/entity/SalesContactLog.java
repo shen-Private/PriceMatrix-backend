@@ -10,9 +10,9 @@ public class SalesContactLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Long customerId;
+    private Long prospectId;
 
     // VISIT / PHONE / EMAIL / QUOTE / OTHER
     @Column(nullable = false)
@@ -44,6 +44,10 @@ public class SalesContactLog {
     public Long getId() { return id; }
     public Long getCustomerId() { return customerId; }
     public void setCustomerId(Long customerId) { this.customerId = customerId; }
+
+    public Long getProspectId() { return prospectId; }
+    public void setProspectId(Long prospectId) { this.prospectId = prospectId; }
+
     public String getType() { return type; }
     public void setType(String type) { this.type = type; }
     public LocalDateTime getContactedAt() { return contactedAt; }

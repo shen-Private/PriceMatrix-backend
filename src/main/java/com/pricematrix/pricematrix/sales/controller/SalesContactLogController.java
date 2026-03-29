@@ -23,7 +23,10 @@ public class SalesContactLogController {
     public List<SalesContactLog> getByCustomer(@PathVariable Long customerId) {
         return service.getByCustomerId(customerId);
     }
-
+    @GetMapping("/prospect/{prospectId}")
+    public List<SalesContactLog> getByProspect(@PathVariable Long prospectId) {
+        return service.getByProspectId(prospectId);
+    }
     // 新增聯絡紀錄
     @PostMapping
     public ResponseEntity<SalesContactLog> create(
@@ -39,4 +42,5 @@ public class SalesContactLogController {
             @RequestBody SalesContactLog updated) {
         return ResponseEntity.ok(service.update(id, updated));
     }
+
 }

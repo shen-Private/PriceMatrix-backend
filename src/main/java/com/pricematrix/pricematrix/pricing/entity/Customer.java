@@ -30,9 +30,9 @@ public class Customer {
     private String note;
 
     // 自我參照：多事務所的上層客戶
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "parent_id")
-    @com.fasterxml.jackson.annotation.JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "parent"})
     private Customer parent;
 
     @Column(name = "created_at")
@@ -55,6 +55,15 @@ public class Customer {
     private boolean active = true;
     public Customer() {}
 
+    @Column(name = "prospect_id")
+    private Long prospectId;
+    public Long getProspectId() { return prospectId; }
+    public void setProspectId(Long prospectId) { this.prospectId = prospectId; }
+    @Column(name = "assigned_to")
+    private String assignedTo;
+
+    public String getAssignedTo() { return assignedTo; }
+    public void setAssignedTo(String assignedTo) { this.assignedTo = assignedTo; }
     // Getters & Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
