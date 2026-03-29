@@ -25,4 +25,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     """)
     List<Product> findAvailableProductsForCustomer(@Param("customerId") Long customerId);
     List<Product> findByStatus(String status);
+    @Query("SELECT p FROM Product p WHERE LOWER(p.name) LIKE LOWER(:keyword)")
+    List<Product> searchByKeyword(@Param("keyword") String keyword);
 }
