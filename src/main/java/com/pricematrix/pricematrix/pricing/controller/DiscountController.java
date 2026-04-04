@@ -1,7 +1,7 @@
 package com.pricematrix.pricematrix.pricing.controller;
 
+import com.pricematrix.pricematrix.audit.Entity.AuditLog;
 import com.pricematrix.pricematrix.pricing.entity.Discount;
-import com.pricematrix.pricematrix.pricing.entity.DiscountAuditLog;
 import com.pricematrix.pricematrix.pricing.service.DiscountService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +42,7 @@ public class DiscountController {
 
     // 查某筆折扣的變更歷史
     @GetMapping("/{id}/audit-logs")
-    public ResponseEntity<List<DiscountAuditLog>> getAuditLogs(@PathVariable Long id) {
+    public ResponseEntity<List<AuditLog>> getAuditLogs(@PathVariable Long id) {
         return ResponseEntity.ok(DiscountService.getAuditLogs(id));
     }
     @GetMapping("/customer/{customerId}/product/{productId}")

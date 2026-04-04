@@ -83,10 +83,10 @@ public class ImprovementController {
     // ── 狀態流轉 ──────────────────────────────────────
 
     @PostMapping("/{id}/submit")
-    public ImprovementProposal submit(@PathVariable Long id) {
-        return improvementService.submitProposal(id);
+    public ImprovementProposal submit(@PathVariable Long id, HttpServletRequest request) {
+        String operatedBy = (String) request.getAttribute("username");
+        return improvementService.submitProposal(id, operatedBy);
     }
-
     @PostMapping("/{id}/review")
     public ImprovementProposal review(
             @PathVariable Long id,
@@ -99,17 +99,20 @@ public class ImprovementController {
     }
 
     @PostMapping("/{id}/cancel")
-    public ImprovementProposal cancel(@PathVariable Long id) {
-        return improvementService.cancelProposal(id);
+    public ImprovementProposal cancel(@PathVariable Long id, HttpServletRequest request) {
+        String operatedBy = (String) request.getAttribute("username");
+        return improvementService.cancelProposal(id, operatedBy);
     }
 
     @PostMapping("/{id}/complete")
     public ImprovementProposal complete(
             @PathVariable Long id,
-            @RequestBody Map<String, Object> body) {
+            @RequestBody Map<String, Object> body,
+            HttpServletRequest request) {
+        String operatedBy = (String) request.getAttribute("username");
         BigDecimal metricActual = body.get("metricActual") != null
                 ? new BigDecimal(body.get("metricActual").toString()) : null;
-        return improvementService.completeProposal(id, metricActual);
+        return improvementService.completeProposal(id, metricActual, operatedBy);
     }
 
     // ── Milestone ─────────────────────────────────────

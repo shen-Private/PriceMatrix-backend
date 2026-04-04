@@ -1,32 +1,25 @@
 package com.pricematrix.pricematrix.pricing.service;
 
+import com.pricematrix.pricematrix.audit.Entity.AuditLog;
+import com.pricematrix.pricematrix.audit.Service.AuditLogService;
 import com.pricematrix.pricematrix.pricing.entity.Discount;
-import com.pricematrix.pricematrix.pricing.entity.DiscountAuditLog;
 import com.pricematrix.pricematrix.pricing.entity.Product;
-import com.pricematrix.pricematrix.pricing.repository.DiscountAuditLogRepository;
 import com.pricematrix.pricematrix.pricing.repository.DiscountRepository;
 import com.pricematrix.pricematrix.pricing.repository.ProductRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import jakarta.servlet.http.HttpServletRequest;
-
 @Service
+@RequiredArgsConstructor
 public class DiscountService {
 
     private final DiscountRepository DiscountRepository;
     private final ProductRepository productRepository;
-    private final DiscountAuditLogRepository auditLogRepository;
-
-    public DiscountService(DiscountRepository DiscountRepository,
-                           ProductRepository productRepository,
-                           DiscountAuditLogRepository auditLogRepository) {
-        this.DiscountRepository = DiscountRepository;
-        this.productRepository = productRepository;
-        this.auditLogRepository = auditLogRepository;
-    }
+    private final AuditLogService auditLogService;  // ← 換掉舊的
 
     public List<Discount> getAllDiscounts() {
         return DiscountRepository.findAll();
@@ -40,24 +33,24 @@ public class DiscountService {
         }
     }
 
-    // 單筆修改（原本的邏輯 + 寫 audit log）
     public Discount updateDiscount(Long id, Discount updatedDiscount, HttpServletRequest request) {
         Discount existing = DiscountRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("找不到折扣記錄：" + id));
 
+        String operatedBy = (String) request.getAttribute("username");
         BigDecimal oldRatio = existing.getDiscountRatio();
         existing.setDiscountRatio(updatedDiscount.getDiscountRatio());
         Discount saved = DiscountRepository.save(existing);
 
-        // 寫 audit log
-        String operatedBy = (String) request.getAttribute("username");
-        writeAuditLog(id, oldRatio, saved.getDiscountRatio(), "UPDATE", operatedBy);
+        auditLogService.log("DISCOUNT", id, "discountRatio",
+                oldRatio != null ? oldRatio.toString() : null,
+                saved.getDiscountRatio().toString(),
+                operatedBy);
         return saved;
     }
 
-    // 批次修改：傳入 Map<discountId, newRatio>
     public void batchUpdateDiscounts(Map<Long, BigDecimal> updates, HttpServletRequest request) {
-        String operatedBy = (String) request.getAttribute("username");  // ← 加在 for 迴圈之前
+        String operatedBy = (String) request.getAttribute("username");
         for (Map.Entry<Long, BigDecimal> entry : updates.entrySet()) {
             Long discountId = entry.getKey();
             BigDecimal newRatio = entry.getValue();
@@ -69,8 +62,10 @@ public class DiscountService {
             existing.setDiscountRatio(newRatio);
             DiscountRepository.save(existing);
 
-            writeAuditLog(discountId, oldRatio, newRatio, "BATCH_UPDATE", operatedBy);
-
+            auditLogService.log("DISCOUNT", discountId, "discountRatio",
+                    oldRatio != null ? oldRatio.toString() : null,
+                    newRatio.toString(),
+                    operatedBy);
         }
     }
 
@@ -85,26 +80,17 @@ public class DiscountService {
         discount.setProduct(product);
         Discount saved = DiscountRepository.save(discount);
 
-        // 新增也寫 log
         String operatedBy = (String) request.getAttribute("username");
-        writeAuditLog(saved.getId(), null, saved.getDiscountRatio(), "CREATE", operatedBy);
+        auditLogService.log("DISCOUNT", saved.getId(), "discountRatio",
+                null,
+                saved.getDiscountRatio().toString(),
+                operatedBy);
         return saved;
     }
 
-    // 查某筆折扣的變更歷史
-    public List<DiscountAuditLog> getAuditLogs(Long discountId) {
-        return auditLogRepository.findByDiscountIdOrderByOperatedAtDesc(discountId);
-    }
-
-    // 內部工具方法：寫 audit log
-    private void writeAuditLog(Long discountId, BigDecimal oldRatio, BigDecimal newRatio, String action, String operatedBy) {
-        DiscountAuditLog log = new DiscountAuditLog();
-        log.setDiscountId(discountId);
-        log.setOldRatio(oldRatio);
-        log.setNewRatio(newRatio);
-        log.setAction(action);
-        log.setOperatedBy(operatedBy); // ← 不再寫死
-        auditLogRepository.save(log);
+    // ← 回傳型別改成 AuditLog
+    public List<AuditLog> getAuditLogs(Long discountId) {
+        return auditLogService.getLogs("DISCOUNT", discountId);
     }
 
     public Optional<Discount> findByCustomerAndProduct(Long customerId, Long productId) {
