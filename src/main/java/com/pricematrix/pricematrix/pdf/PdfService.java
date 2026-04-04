@@ -19,7 +19,7 @@ public class PdfService {
             ITextRenderer renderer = new ITextRenderer();
 
             // 嵌入日文字型
-            URL fontUrl = getClass().getClassLoader().getResource("fonts/NotoSansJP-VariableFont_wght.ttf");
+            URL fontUrl = getClass().getClassLoader().getResource("fonts/NotoSansJP-Regular.ttf");
             System.out.println("字型路徑: " + fontUrl);
             if (fontUrl != null) {
                 renderer.getFontResolver().addFont(
