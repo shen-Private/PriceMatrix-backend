@@ -45,7 +45,7 @@ public class PdfController {
 
     private String buildQuoteHtml(SalesQuote quote) {
         // 取得字型路徑
-        URL fontUrl = getClass().getClassLoader().getResource("fonts/NotoSansJP-VariableFont_wght.ttf");
+        URL fontUrl = getClass().getClassLoader().getResource("fonts/NotoSansJP-Regular.ttf");
         String fontPath = fontUrl != null ? fontUrl.toString() : "";
 
         StringBuilder rows = new StringBuilder();
@@ -97,7 +97,7 @@ public class PdfController {
                 </style>
                 </head>
                 <body>
-                    <h1>御 見 積 書あ</h1>
+                    <h1>御 見 積 書</h1>
                     <table class="header-table">
                         <tr>
                             <td class="customer-info">
