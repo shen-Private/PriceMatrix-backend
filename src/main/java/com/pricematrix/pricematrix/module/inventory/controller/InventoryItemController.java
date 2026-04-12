@@ -1,0 +1,62 @@
+package com.pricematrix.pricematrix.module.inventory.controller;
+
+import com.pricematrix.pricematrix.module.inventory.entity.InventoryItem;
+import com.pricematrix.pricematrix.module.inventory.service.InventoryItemService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/inventory/items")
+@RequiredArgsConstructor
+public class InventoryItemController {
+
+    private final InventoryItemService itemService;
+
+    @GetMapping
+    public List<InventoryItem> getAllItems() {
+        return itemService.getAllActiveItems();
+    }
+
+    @GetMapping("/{id}")
+    public InventoryItem getItem(@PathVariable Long id) {
+        return itemService.getItemById(id);
+    }
+
+    @PostMapping
+    public InventoryItem createItem(@RequestBody CreateItemRequest req) {
+        return itemService.createItemWithProduct(req);
+    }
+    @PutMapping("/{id}")
+    public InventoryItem updateItem(@PathVariable Long id, @RequestBody InventoryItem item) {
+        return itemService.updateItem(id, item);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deactivateItem(@PathVariable Long id) {
+        itemService.deactivateItem(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/barcode/{barcode}")
+    public ResponseEntity<InventoryItem> getItemByBarcode(@PathVariable String barcode) {
+        return itemService.getItemByBarcode(barcode)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/overview")
+    public List<InventoryItemService.ItemOverviewDTO> getOverview() {
+        return itemService.getOverview();
+    }
+
+    @PostMapping("/pending")
+    public ResponseEntity<InventoryItem> createPending(
+            @RequestParam Long productId,
+            @RequestParam String barcode) {
+        InventoryItem item = itemService.createPendingItem(productId, barcode);
+        return ResponseEntity.ok(item);
+    }
+
+}

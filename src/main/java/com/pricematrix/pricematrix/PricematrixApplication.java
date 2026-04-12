@@ -3,7 +3,7 @@ package com.pricematrix.pricematrix;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import com.pricematrix.pricematrix.pdf.CompanyProperties;
+import com.pricematrix.pricematrix.common.pdf.CompanyProperties;
 
 @SpringBootApplication
 @EnableConfigurationProperties(CompanyProperties.class)
