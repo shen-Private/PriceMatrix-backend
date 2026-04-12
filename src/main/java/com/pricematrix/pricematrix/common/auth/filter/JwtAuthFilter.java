@@ -32,6 +32,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
+        if (path.equals("/health")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 // CORS preflight（OPTIONS）はそのまま通す
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             filterChain.doFilter(request, response);
